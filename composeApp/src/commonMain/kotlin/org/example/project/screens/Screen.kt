@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +24,6 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -36,6 +36,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import instagram.composeapp.generated.resources.Res
@@ -52,40 +54,42 @@ import instagram.composeapp.generated.resources.ligeirinho
 import instagram.composeapp.generated.resources.luiza
 import instagram.composeapp.generated.resources.messenger
 import instagram.composeapp.generated.resources.profile_circle
-import instagram.composeapp.generated.resources.send_2
+import instagram.composeapp.generated.resources.send
 import instagram.composeapp.generated.resources.simba_lion
 import instagram.composeapp.generated.resources.video_play
 import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
-fun FirstScreen() {
+fun HomeScreen() {
   val image = listOf(
-    StoryCard(image = painterResource(Res.drawable.alvin), label = "Your story"),
-    StoryCard(image = painterResource(Res.drawable.simba_lion), label = "Simba"),
-    StoryCard(image = painterResource(Res.drawable.luiza), label = "Luiza"),
-    StoryCard(image = painterResource(Res.drawable.kiara_lion), label = "Kiara"),
-    StoryCard(image = painterResource(Res.drawable.cats_with_balls), label = "Ronaldo"),
-    StoryCard(image = painterResource(Res.drawable.ligeirinho), label = "Ligeirinho"),
+    StoryCard(image = painterResource(Res.drawable.alvin), label = "Your story", description = "Good morning :)"),
+    StoryCard(image = painterResource(Res.drawable.simba_lion), label = "Simba", description = "Sun"),
+    StoryCard(image = painterResource(Res.drawable.luiza), label = "Luiza", description = "Minha irmã Laís é a melhor"),
+    StoryCard(image = painterResource(Res.drawable.kiara_lion), label = "Kiara", description = "Miau"),
+    StoryCard(image = painterResource(Res.drawable.cats_with_balls), label = "Ronaldo", description = "Aqui é brasilllll"),
+    StoryCard(image = painterResource(Res.drawable.ligeirinho), label = "Ligeirinho", description = "Boraa"),
   )
 
-  Surface(modifier = Modifier.fillMaxSize()) {
-    Scaffold(
-      modifier = Modifier.fillMaxSize(),
-      topBar = { TopBar() },
-      bottomBar = { BottomAppBar() }
-    ) { padding ->
-      Column(modifier = Modifier.fillMaxSize().padding(padding)) {
-        ListStories(image)
-        Feed(image)
+
+  Scaffold(
+    modifier = Modifier.fillMaxSize(),
+    topBar = { TopBar() },
+    bottomBar = { BottomAppBar() }
+  ) { padding ->
+    LazyColumn(modifier = Modifier.fillMaxSize().padding(padding)) {
+      item { ListStories(image) }
+      items(image) { item ->
+        FeedItem(item)
       }
+
     }
   }
 
 }
 
 
-data class StoryCard(val image: Painter, val label: String)
+data class StoryCard(val image: Painter, val label: String, val description: String)
 
 @Composable
 fun ListStories(stories: List<StoryCard>) {
@@ -121,14 +125,11 @@ fun ListStories(stories: List<StoryCard>) {
 
         Text(text = story.label)
 
-
       }
 
     }
 
   }
-
-  Feed(stories)
 
 }
 
@@ -167,30 +168,45 @@ fun TopBar() {
 }
 
 @Composable
-fun Feed(image: List<StoryCard>) {
+fun FeedItem(item: StoryCard) {
 
-  LazyColumn {
+  Column(modifier = Modifier.fillMaxWidth()) {
 
-    items(image) { item ->
-
-      Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(16.dp)) {
-
-        Text(text = item.label, modifier = Modifier.align(alignment = Alignment.Start))
-
-        Image(painter = item.image, contentDescription = "")
-
-        Row(
-          modifier = Modifier.fillMaxWidth().padding(4.dp),
-          horizontalArrangement = Arrangement.spacedBy(4.dp, alignment = Alignment.Start)
-        ) {
-          Image(painter = painterResource(Res.drawable.heart_), contentDescription = "", colorFilter = ColorFilter.tint(Color.Black))
-          Image(painter = painterResource(Res.drawable.chat), contentDescription = "", colorFilter = ColorFilter.tint(Color.Black))
-          Image(painter = painterResource(Res.drawable.send_2), contentDescription = "")
-          Image(painter = painterResource(Res.drawable.archive), contentDescription = "")
-        }
-      }
+    Row(modifier = Modifier.fillMaxWidth().padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+      Image(
+        painter = item.image,
+        contentDescription = "",
+        contentScale = ContentScale.Crop,
+        modifier = Modifier.size(40.dp).clip(CircleShape),
+      )
+      Text(text = item.label, modifier = Modifier.padding(start = 16.dp))
     }
 
+    Image(
+      painter = item.image,
+      contentDescription = "",
+      modifier = Modifier.fillMaxWidth().aspectRatio(0.85f),
+      contentScale = ContentScale.Crop
+    )
+
+    Row(
+      modifier = Modifier.align(Alignment.Start).padding(10.dp),
+      horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+      Image(painter = painterResource(Res.drawable.heart_), contentDescription = "", colorFilter = ColorFilter.tint(Color.Black))
+      Image(painter = painterResource(Res.drawable.chat), contentDescription = "", colorFilter = ColorFilter.tint(Color.Black))
+      Image(painter = painterResource(Res.drawable.send), contentDescription = "", colorFilter = ColorFilter.tint(Color.Black))
+
+      Spacer(modifier = Modifier.weight(1f))
+
+      Image(painter = painterResource(Res.drawable.archive), contentDescription = "")
+    }
+    Row {
+
+      Text(text = item.label, modifier = Modifier.padding(start = 8.dp), fontWeight = FontWeight.Bold)
+      Text(text = item.description, modifier = Modifier.padding(start = 10.dp))
+    }
+    Spacer(modifier = Modifier.height(16.dp))
   }
 }
 

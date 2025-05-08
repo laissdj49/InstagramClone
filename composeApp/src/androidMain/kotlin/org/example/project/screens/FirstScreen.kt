@@ -7,9 +7,8 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Preview(showBackground = true)
 @Composable
-fun FirstScreenPreview(){
-   MaterialTheme {
-        FirstScreen()
-    }
+fun FirstScreenPreview() {
+  MaterialTheme {
+    HomeScreen()
+  }
 }
-
