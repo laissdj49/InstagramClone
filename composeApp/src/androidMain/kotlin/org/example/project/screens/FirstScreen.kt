@@ -12,3 +12,9 @@ fun FirstScreenPreview() {
     HomeScreen()
   }
 }
+@Preview(showBackground = true)@Composable
+fun ChatScreenPreview(){
+  MaterialTheme {
+    ChatScreen()
+  }
+}

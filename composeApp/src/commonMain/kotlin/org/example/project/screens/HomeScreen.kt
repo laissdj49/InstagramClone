@@ -53,6 +53,7 @@ import instagram.composeapp.generated.resources.kiara_lion
 import instagram.composeapp.generated.resources.ligeirinho
 import instagram.composeapp.generated.resources.luiza
 import instagram.composeapp.generated.resources.messenger
+import instagram.composeapp.generated.resources.points
 import instagram.composeapp.generated.resources.profile_circle
 import instagram.composeapp.generated.resources.send
 import instagram.composeapp.generated.resources.simba_lion
@@ -77,12 +78,12 @@ fun HomeScreen() {
     topBar = { TopBar() },
     bottomBar = { BottomAppBar() }
   ) { padding ->
+    // caiq: por id key
     LazyColumn(modifier = Modifier.fillMaxSize().padding(padding)) {
       item { ListStories(image) }
       items(image) { item ->
         FeedItem(item)
       }
-
     }
   }
 
@@ -124,13 +125,9 @@ fun ListStories(stories: List<StoryCard>) {
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(text = story.label)
-
       }
-
     }
-
   }
-
 }
 
 
@@ -180,6 +177,8 @@ fun FeedItem(item: StoryCard) {
         modifier = Modifier.size(40.dp).clip(CircleShape),
       )
       Text(text = item.label, modifier = Modifier.padding(start = 16.dp))
+      Spacer(modifier = Modifier.weight(1f))
+      Image(painter = painterResource(Res.drawable.points), contentDescription = "", modifier = Modifier.padding(end = 4.dp))
     }
 
     Image(
